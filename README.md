@@ -30,7 +30,7 @@ ArrayList中维护了一个按照下标顺序的一维数组，数组中每个it
     }
 ```
 
-当我们通过下标进行指定位置增加或者删除操作时，先由下标index从item数组找到对应item，然后在其后面增加一个item或者删除该item，接着从这个下标开始向后，把剩下的item通过复制，向前或者向后移动一位。
+当我们通过下标进行指定位置增加或者删除操作时，先由下标index从item数组找到对应item，接着从这个下标开始向后，把剩下的item通过覆盖复制，向后或者向前移动一位，最后在index位置增加一个item或者置空末尾item。
 ```
     // 增加
     public void add(int index, E element) {
@@ -57,6 +57,10 @@ ArrayList中维护了一个按照下标顺序的一维数组，数组中每个it
         elementData[--size] = null; // clear to let GC do its work
 
         return oldValue;
+    }
+    
+    E elementData(int index) {
+        return (E) elementData[index];
     }
 ```
 
