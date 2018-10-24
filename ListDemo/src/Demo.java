@@ -1,10 +1,11 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Demo {
-	private final static int MAX_SIZE = 1000;
-	private final static int TEST_TIMES = 1000;
+	private final static int MAX_SIZE = 10000;
+	private final static int TEST_TIMES = 10000;
 	private final static Integer DEFAULT_ITEM = 0;
 	private List<Integer> arrayList;
 	private List<Integer> linkedList;
@@ -72,10 +73,30 @@ public class Demo {
 		System.out.println("In linkedList, cost time: " + (stop2 - start2) + " ns");
 	}
 
+	public void testIterator() {
+		System.out.println("\ntest Iterator:");
+		Iterator<Integer> iterator1 = arrayList.iterator();
+		long start1 = System.nanoTime();
+		while (iterator1.hasNext()) {
+			iterator1.next();
+		}
+		long stop1 = System.nanoTime();
+		System.out.println("In arrayList, cost time: " + (stop1 - start1) + " ns");
+
+		Iterator<Integer> iterator2 = linkedList.iterator();
+		long start2 = System.nanoTime();
+		while (iterator2.hasNext()) {
+			iterator2.next();
+		}
+		long stop2 = System.nanoTime();
+		System.out.println("In linkedList, cost time: " + (stop2 - start2) + " ns");
+	}
+
 	public static void main(String[] args) {
 		Demo demo = new Demo();
 		demo.init();
 		demo.testAdd();
 		demo.testFind();
+		demo.testIterator();
 	}
 }

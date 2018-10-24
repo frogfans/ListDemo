@@ -1,6 +1,10 @@
-# ArrayList和LinkedList的性能对比
+# ArrayList和LinkedList的效率对比
 
-## 一、 数据结构
+## 一、 前言
+
+首先我要批判一下很多关于这两个数据结构的对比测试文章，其作者在根本没搞清楚这俩内部实现原理和数据结构的情况下，用错误的方法测得结果，碰巧符合理论，因此认为符合，从而误导读者。之所以这么说，还请读者细读本文，之后便明白了。
+
+## 二、 数据结构
 
 ### ArrayList
 ![](https://github.com/frogfans/ListDemo/blob/master/image/arraylist.png)
@@ -218,7 +222,7 @@ LinkedList中的每一个item，称为node，它包含三个部分：当前node�
 ```
 
 ---
-## 二、 性能对比
+## 三、 效率对比
 
 我们构造相同长度的ArrayList和LinkedList，由于增加操作会改变数组长度，导致时间增加，我们用一次增加一次删除交替进行，并分别统计二者时间。由于修改操作的实现过程基于查找操作，我们仅以查找为例。
 ```
@@ -310,15 +314,18 @@ In linkedList, cost time: 944334 ns
 ```
 
 ---
-## 三、 结论
+## 四、 结论
+
+LinkedList的耗时由寻址时间和连接节点时间组成，连接节点时间对于任何两个位置都几乎相同（两端稍微小一点），但寻址很耗时；ArrayList的耗时由一维数组访问时间和数组拷贝时间组成，访问时间几乎可以忽略，但拷贝很耗时。
 
 理论上：
 
-- 对于随机增删操作：LinkedList平均效率优于ArrayList，因为LinkedList中单次连接节点的时间小于ArrayList中数组拷贝的时间。
-- 对于随机查改操作：ArrayList平均效率优于LinkedList，因为ArrayList中访问一维数组的时间小于LinkedList中寻址的时间。
+- 对于随机增删操作：LinkedList平均效率优于ArrayList，因为LinkedList中单次连接节点的时间小于ArrayList中数组拷贝的时间。由于LinkedList的双向性，两端耗时最小，中间耗时最大；ArrayList头端耗时最大，尾端耗时最小。
+
+- 对于随机查改操作：ArrayList平均效率优于LinkedList，因为ArrayList中访问一维数组的时间小于LinkedList中寻址的时间。由于LinkedList的双向性，两端耗时最小，中间耗时最大；ArrayList耗时从头端向尾端依次增加。
 
 实际结果：
 
 - 对于随机增删操作：LinkedList耗时明显大于ArrayList，不符合预期，对于这个结果，我目前没想到方法去证明，网上有别人的证明过程，但是很多都是有问题的，每次增删操作后，ArrayList长度改变了，下一次拷贝数组的时间就有误差，而LinkedList不受影响，另一种就是往固定位置插入或删除item，这也是不对的。读者可自行尝试证明这个结论，但要注意一点，每次增删操作时数组长度相同，增删操作要么具有随机性，要么就从头到尾都增删一次来计算平均时间。
-- 对于随机查改操作：ArrayList耗时明显小于LinkedList，符合预期。
 
+- 对于随机查改操作：ArrayList耗时明显小于LinkedList，符合预期。
