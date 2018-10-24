@@ -1,5 +1,3 @@
-# ArrayList和LinkedList的效率对比
-
 ## 一、 前言
 
 首先我要批判一下很多关于这两个数据结构的对比测试文章，其作者在根本没搞清楚这俩内部实现原理和数据结构的情况下，用错误的方法测得结果，碰巧符合理论，因此认为符合，从而误导读者。之所以这么说，还请读者细读本文，之后便明白了。
@@ -7,7 +5,7 @@
 ## 二、 数据结构
 
 ### ArrayList
-![](https://github.com/frogfans/ListDemo/blob/master/image/arraylist.png)
+![](https://raw.githubusercontent.com/frogfans/ListDemo/master/image/arraylist.png)
 
 ArrayList在内存中是连续的、单向的、有序的。
 
@@ -93,7 +91,7 @@ ArrayList中维护了一个按照下标顺序的一维数组，数组中每个it
 
 ---
 ### LinkedList
-![](https://github.com/frogfans/ListDemo/blob/master/image/linkedlist.png)
+![](https://raw.githubusercontent.com/frogfans/ListDemo/master/image/linkedlist.png)
 
 LinkedList在内存中是不连续的、双向的、有序的。
 
@@ -117,8 +115,24 @@ LinkedList中的每一个item，称为node，它包含三个部分：当前node�
     }
 ```
 
-当我们通过下标进行指定位置增加或者删除操作时，会从first node开始，不断地由node的next找到下一个node，直到到达目标node，如果是增加操作，则创建一个node，将上一个node的next指向新node的prev，将下一个node的prev指向新node的next，这样就在list中间重新连接起来；如果是删除操作，则删除当前node，将上一个node的next指向下一个node的prev。
+当我们通过下标进行指定位置增加或者删除操作时，会从first node开始（如果下标指向末端，则直接到末端node），不断地由node的next找到下一个node，直到到达目标node，如果是增加操作，则创建一个node，将上一个node的next指向新node的prev，将下一个node的prev指向新node的next，这样就在list中间重新连接起来；如果是删除操作，则删除当前node，将上一个node的next指向下一个node的prev。
 ```
+    Node<E> node(int index) {
+        // assert isElementIndex(index);
+
+        if (index < (size >> 1)) {
+            Node<E> x = first;
+            for (int i = 0; i < index; i++)
+                x = x.next;
+            return x;
+        } else {
+            Node<E> x = last;
+            for (int i = size - 1; i > index; i--)
+                x = x.prev;
+            return x;
+        }
+    }
+    
     // 增加
     public void add(int index, E element) {
         checkPositionIndex(index);
