@@ -221,15 +221,104 @@ LinkedList中的每一个item，称为node，它包含三个部分：当前node�
 ## 二、 性能对比
 
 我们构造相同长度的ArrayList和LinkedList，由于增加操作会改变数组长度，导致时间增加，我们用一次增加一次删除交替进行，并分别统计二者时间。由于修改操作的实现过程基于查找操作，我们仅以查找为例。
+```
+	private final static int MAX_SIZE = 1000;
+	private final static int TEST_TIMES = 1000;
+	private final static Integer DEFAULT_ITEM = 0;
+	private List<Integer> arrayList;
+	private List<Integer> linkedList;
+
+	public void init() {
+		arrayList = new ArrayList<>();
+		linkedList = new LinkedList<>();
+		for (int i = 0; i < MAX_SIZE; i++) {
+			arrayList.add(i);
+			linkedList.add(i);
+		}
+	}
+```
 
 对于增加/删除操作：
+```
+	public void testAdd() {
+		System.out.println("\ntest add:");
+		long totalAddArrayList = 0;
+		long totalRemoveArrayList = 0;
+		long totalAddLinkedList = 0;
+		long totalRemoveLinkedList = 0;
+		long start, stop;
 
+		for (int i = 0; i < TEST_TIMES; i++) {
+			start = System.nanoTime();
+			arrayList.add(i, DEFAULT_ITEM);
+			stop = System.nanoTime();
+			totalAddArrayList += (stop - start);
 
+			start = System.nanoTime();
+			arrayList.remove(i);
+			stop = System.nanoTime();
+			totalRemoveArrayList += (stop - start);
+		}
+		System.out.println("In arrayList, add cost time: " + totalAddArrayList + " ns, remove cost time: "
+				+ totalRemoveArrayList + " ns");
+
+		for (int i = 0; i < TEST_TIMES; i++) {
+			start = System.nanoTime();
+			linkedList.add(i, DEFAULT_ITEM);
+			stop = System.nanoTime();
+			totalAddLinkedList += (stop - start);
+
+			start = System.nanoTime();
+			linkedList.remove(i);
+			stop = System.nanoTime();
+			totalRemoveLinkedList += (stop - start);
+		}
+		System.out.println("In linkedList, add cost time: " + totalAddLinkedList + " ns, remove cost time: "
+				+ totalRemoveLinkedList + " ns");
+	}
+```
 
 对于查找操作：
+```
+	public void testFind() {
+		System.out.println("\ntest find:");
+		long start1 = System.nanoTime();
+		for (int i = 0; i < TEST_TIMES; i++) {
+			arrayList.get(i);
+		}
+		long stop1 = System.nanoTime();
+		System.out.println("In arrayList, cost time: " + (stop1 - start1) + " ns");
 
+		long start2 = System.nanoTime();
+		for (int i = 0; i < TEST_TIMES; i++) {
+			linkedList.get(i);
+		}
+		long stop2 = System.nanoTime();
+		System.out.println("In linkedList, cost time: " + (stop2 - start2) + " ns");
+	}
+```
 
+运行结果：
+```
+test add:
+In arrayList, add cost time: 590724 ns, remove cost time: 635214 ns
+In linkedList, add cost time: 1612482 ns, remove cost time: 1538693 ns
+
+test find:
+In arrayList, cost time: 136996 ns
+In linkedList, cost time: 944334 ns
+```
 
 ---
 ## 三、 结论
+
+理论上：
+
+- 对于随机增删操作：LinkedList平均效率优于ArrayList，因为LinkedList中单次连接节点的时间小于ArrayList中数组拷贝的时间。
+- 对于随机查改操作：ArrayList平均效率优于LinkedList，因为ArrayList中访问一维数组的时间小于LinkedList中寻址的时间。
+
+实际结果：
+
+- 对于随机增删操作：LinkedList耗时明显大于ArrayList，不符合预期，对于这个结果，我目前没想到方法去证明，网上有别人的证明过程，但是很多都是有问题的，每次增删操作后，ArrayList长度改变了，下一次拷贝数组的时间就有误差，而LinkedList不受影响，另一种就是往固定位置插入或删除item，这也是不对的。读者可自行尝试证明这个结论，但要注意一点，每次增删操作时数组长度相同，增删操作要么具有随机性，要么就从头到尾都增删一次来计算平均时间。
+- 对于随机查改操作：ArrayList耗时明显小于LinkedList，符合预期。
 

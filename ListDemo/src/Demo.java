@@ -3,14 +3,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Demo {
-	private final static int MAX_SIZE = 100;
-	private final static int TEST_TIMES = 100;
-	private final static int DEFAULT_INT = 0;
+	private final static int MAX_SIZE = 1000;
+	private final static int TEST_TIMES = 1000;
+	private final static Integer DEFAULT_ITEM = 0;
 	private List<Integer> arrayList;
 	private List<Integer> linkedList;
 
 	public void init() {
-		arrayList = new ArrayList<>(MAX_SIZE);
+		arrayList = new ArrayList<>();
 		linkedList = new LinkedList<>();
 		for (int i = 0; i < MAX_SIZE; i++) {
 			arrayList.add(i);
@@ -25,9 +25,10 @@ public class Demo {
 		long totalAddLinkedList = 0;
 		long totalRemoveLinkedList = 0;
 		long start, stop;
+
 		for (int i = 0; i < TEST_TIMES; i++) {
 			start = System.nanoTime();
-			arrayList.add(i, DEFAULT_INT);
+			arrayList.add(i, DEFAULT_ITEM);
 			stop = System.nanoTime();
 			totalAddArrayList += (stop - start);
 
@@ -36,12 +37,12 @@ public class Demo {
 			stop = System.nanoTime();
 			totalRemoveArrayList += (stop - start);
 		}
-		System.out.println(
-				"In arrayList, add cost time: " + totalAddArrayList + ", remove cost time: " + totalRemoveArrayList);
+		System.out.println("In arrayList, add cost time: " + totalAddArrayList + " ns, remove cost time: "
+				+ totalRemoveArrayList + " ns");
 
 		for (int i = 0; i < TEST_TIMES; i++) {
 			start = System.nanoTime();
-			linkedList.add(i, DEFAULT_INT);
+			linkedList.add(i, DEFAULT_ITEM);
 			stop = System.nanoTime();
 			totalAddLinkedList += (stop - start);
 
@@ -50,31 +51,31 @@ public class Demo {
 			stop = System.nanoTime();
 			totalRemoveLinkedList += (stop - start);
 		}
-		System.out.println(
-				"In linkedList, add cost time: " + totalAddLinkedList + ", remove cost time: " + totalRemoveLinkedList);
+		System.out.println("In linkedList, add cost time: " + totalAddLinkedList + " ns, remove cost time: "
+				+ totalRemoveLinkedList + " ns");
 	}
 
 	public void testFind() {
 		System.out.println("\ntest find:");
-		long start1 = System.currentTimeMillis();
+		long start1 = System.nanoTime();
 		for (int i = 0; i < TEST_TIMES; i++) {
 			arrayList.get(i);
 		}
-		long stop1 = System.currentTimeMillis();
-		System.out.println("In arrayList, cost time: " + (stop1 - start1));
-		long start2 = System.currentTimeMillis();
+		long stop1 = System.nanoTime();
+		System.out.println("In arrayList, cost time: " + (stop1 - start1) + " ns");
+
+		long start2 = System.nanoTime();
 		for (int i = 0; i < TEST_TIMES; i++) {
 			linkedList.get(i);
 		}
-		long stop2 = System.currentTimeMillis();
-		System.out.println("In linkedList, cost time: " + (stop2 - start2));
+		long stop2 = System.nanoTime();
+		System.out.println("In linkedList, cost time: " + (stop2 - start2) + " ns");
 	}
 
 	public static void main(String[] args) {
 		Demo demo = new Demo();
 		demo.init();
 		demo.testAdd();
-//		demo.testFind();
+		demo.testFind();
 	}
-
 }
