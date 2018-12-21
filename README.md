@@ -5,7 +5,7 @@
 ## 二、 数据结构
 
 ### ArrayList
-![](https://raw.githubusercontent.com/frogfans/ListDemo/master/image/arraylist.png)
+![](image/arraylist.png?raw=true)
 
 ArrayList在内存中是连续的、单向的、有序的。
 
@@ -91,7 +91,7 @@ ArrayList中维护了一个按照下标顺序的一维数组，数组中每个it
 
 ---
 ### LinkedList
-![](https://raw.githubusercontent.com/frogfans/ListDemo/master/image/linkedlist.png)
+![](image/linkedlist.png?raw=true)
 
 LinkedList在内存中是不连续的、双向的、有序的。
 
